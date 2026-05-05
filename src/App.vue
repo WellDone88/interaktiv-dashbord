@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import Clock from './components/Clock.vue'
+import Calendar from './components/Calendar.vue'
+import Weather from './components/Weather.vue'
+import TodoList from './components/TodoList.vue'
+import Timer from './components/Timer.vue'
 </script>
 
 <template>
   <div id="dashboard">
     <header class="header"></header>
-    <Clock />
-    <Weather />
-    <TodoList />
-    <Timer />
-    <Calendar />
-
     <main class="grid-container">
       <Weather class="card" />
+      <Clock class="card" />
       <TodoList class="card" />
       <Timer class="card" />
       <Calendar class="card" />
