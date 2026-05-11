@@ -1,11 +1,16 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useTodoList } from '../composables/useTodoList'
-import { useSelectedDate } from '../composables/useSelectedDate'
+import { storeToRefs } from 'pinia'
+import { useTodoListStore } from '../stores/todoList'
+import { useSelectedDateStore } from '../stores/selectedDate'
 import { useNorwegianHolidays } from '../composables/useNorwegianHolidays'
 
-const { todos, addNewTodo, removeTodoItem, toggleTodoItem } = useTodoList()
-const { selectedDate } = useSelectedDate()
+const todoStore = useTodoListStore()
+const { todos } = storeToRefs(todoStore)
+const { addNewTodo, removeTodoItem, toggleTodoItem } = todoStore
+
+const selectedDateStore = useSelectedDateStore()
+const { selectedDate } = storeToRefs(selectedDateStore)
 const { getHolidayName } = useNorwegianHolidays()
 
 const newTodoTitle = ref('')

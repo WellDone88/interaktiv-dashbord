@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useTimer } from '../composables/useTimer'
+import { storeToRefs } from 'pinia'
+import { useTimerStore } from '../stores/timer'
 
 const minutes = ref(5)
 const seconds = ref(0)
 
-const { formattedTime, hasFinished, isRunning, setTimer, startTimer, pauseTimer, resetTimer } =
-  useTimer()
+const timerStore = useTimerStore()
+const { formattedTime, hasFinished, isRunning } = storeToRefs(timerStore)
+const { setTimer, startTimer, pauseTimer, resetTimer } = timerStore
 
 const updateTimer = () => {
   const totalSeconds =

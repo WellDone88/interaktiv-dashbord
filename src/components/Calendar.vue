@@ -1,13 +1,21 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useCalendar } from '../composables/useCalendar'
-import { useSelectedDate } from '../composables/useSelectedDate'
-import { useTodoList } from '../composables/useTodoList'
+import { storeToRefs } from 'pinia'
+import { useCalendarStore } from '../stores/calendar'
+import { useSelectedDateStore } from '../stores/selectedDate'
+import { useTodoListStore } from '../stores/todoList'
 import { useNorwegianHolidays } from '../composables/useNorwegianHolidays'
 
-const { year, month, monthName, weeks, goToPreviousMonth, goToNextMonth } = useCalendar()
-const { selectedDate, selectDate } = useSelectedDate()
-const { todos } = useTodoList()
+const calendarStore = useCalendarStore()
+const { year, month, monthName, weeks } = storeToRefs(calendarStore)
+const { goToPreviousMonth, goToNextMonth } = calendarStore
+
+const selectedDateStore = useSelectedDateStore()
+const { selectedDate } = storeToRefs(selectedDateStore)
+const { selectDate } = selectedDateStore
+
+const todoStore = useTodoListStore()
+const { todos } = storeToRefs(todoStore)
 const { isHoliday, getHolidayName } = useNorwegianHolidays()
 
 // Get days with todos for current month
@@ -42,9 +50,9 @@ const isSelected = computed(() => {
   return (day: number | null) => {
     if (!day) return false
     const parts = selectedDate.value.split('-')
-    const selectedYear = parseInt(parts[0], 10)
-    const selectedMonth = parseInt(parts[1], 10) - 1
-    const selectedDay = parseInt(parts[2], 10)
+    const selectedYear = parseInt(parts[0] ?? '2026', 10)
+    const selectedMonth = parseInt(parts[1] ?? '1', 10) - 1
+    const selectedDay = parseInt(parts[2] ?? '1', 10)
 
     return day === selectedDay && year.value === selectedYear && month.value === selectedMonth
   }

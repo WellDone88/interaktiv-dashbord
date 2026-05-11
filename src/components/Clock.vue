@@ -1,7 +1,9 @@
 ﻿<script setup lang="ts">
-import { useLocalTime } from '../composables/useLocalTime'
+import { storeToRefs } from 'pinia'
+import { useLocalTimeStore } from '../stores/localTime'
 
-const { localTime } = useLocalTime()
+const localTimeStore = useLocalTimeStore()
+const { localTime } = storeToRefs(localTimeStore)
 </script>
 
 <template>

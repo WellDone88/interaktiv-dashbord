@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useWeather } from '../composables/useWeather'
+import { storeToRefs } from 'pinia'
+import { useWeatherStore } from '../stores/weather'
 
-const { weather, icon, description, temperatureDisplay, refreshWeather, loading } = useWeather()
+const weatherStore = useWeatherStore()
+const { weather, icon, description, temperatureDisplay, loading } = storeToRefs(weatherStore)
+const { refreshWeather } = weatherStore
 
 onMounted(() => {
   refreshWeather()

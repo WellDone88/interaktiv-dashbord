@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
+import { createTestingPinia } from '@pinia/testing'
 import Clock from '../components/Clock.vue'
 
 const fixedDate = new Date(2026, 4, 5, 12, 34, 56)
@@ -15,7 +16,11 @@ describe('Clock.vue', () => {
   })
 
   it('renderer lokal tid og dato', async () => {
-    const wrapper = mount(Clock)
+    const wrapper = mount(Clock, {
+      global: {
+        plugins: [createTestingPinia()],
+      },
+    })
 
     expect(wrapper.text()).toContain(fixedDate.toLocaleTimeString())
     expect(wrapper.text()).toContain(fixedDate.toLocaleDateString())
