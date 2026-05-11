@@ -5,7 +5,10 @@ const getDaysInMonth = (date: Date): number => {
 }
 
 const getFirstDayOfMonth = (date: Date): number => {
-  return new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+  // JavaScript getDay() returns 0 (Sunday) to 6 (Saturday)
+  // We want Monday = 0, so we adjust: (getDay() - 1 + 7) % 7
+  const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), 1).getDay()
+  return (dayOfWeek - 1 + 7) % 7
 }
 
 const generateCalendarDays = (date: Date): (number | null)[] => {

@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useTodoList } from '../composables/useTodoList'
+import { useSelectedDate } from '../composables/useSelectedDate'
+import { useNorwegianHolidays } from '../composables/useNorwegianHolidays'
 
 const { todos, addNewTodo, removeTodoItem, toggleTodoItem } = useTodoList()
+const { selectedDate } = useSelectedDate()
+const { getHolidayName } = useNorwegianHolidays()
 
 const newTodoTitle = ref('')
-const selectedDate = ref(new Date().toISOString().split('T')[0])
 
 const todosForSelectedDate = computed(() => {
   const parts = (selectedDate.value || '2026-01-01').split('-')
@@ -61,6 +64,14 @@ const displayDate = computed(() => {
     day: 'numeric',
   })
 })
+
+const holidayName = computed(() => {
+  const parts = (selectedDate.value || '2026-01-01').split('-')
+  const year = parseInt(parts[0] || '2026', 10)
+  const month = parseInt(parts[1] || '1', 10) - 1
+  const day = parseInt(parts[2] || '1', 10)
+  return getHolidayName(year, month, day)
+})
 </script>
 
 <template>
@@ -73,6 +84,7 @@ const displayDate = computed(() => {
       <label for="todo-date">Velg dato:</label>
       <input v-model="selectedDate" id="todo-date" type="date" class="date-input" />
       <span class="selected-date">{{ displayDate }}</span>
+      <span v-if="holidayName" class="holiday-name">{{ holidayName }}</span>
     </div>
 
     <div class="add-todo">
@@ -181,6 +193,15 @@ const displayDate = computed(() => {
   color: #0066cc;
   font-weight: 500;
   margin-left: auto;
+}
+
+.holiday-name {
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  font-weight: 600;
+  padding: 4px 8px;
+  background-color: #3a1a1a;
+  border-radius: 4px;
 }
 
 .add-todo {
