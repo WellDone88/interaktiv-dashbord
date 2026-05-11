@@ -29,20 +29,35 @@ const playAlarmSound = () => {
   }
 }
 
+const startAlarmLoop = (): number => {
+  return window.setInterval(() => {
+    playAlarmSound()
+  }, 800)
+}
+
 export const useTimerStore = defineStore('timer', () => {
   const durationSeconds = ref(300)
   const remainingSeconds = ref(durationSeconds.value)
   const isRunning = ref(false)
   const intervalId = ref<number | null>(null)
+  const alarmIntervalId = ref<number | null>(null)
 
   const formattedTime = computed(() => formatTime(remainingSeconds.value))
   const hasFinished = computed(() => remainingSeconds.value <= 0)
+
+  const stopAlarm = () => {
+    if (alarmIntervalId.value !== null) {
+      clearInterval(alarmIntervalId.value)
+      alarmIntervalId.value = null
+    }
+  }
 
   const stopTimer = () => {
     if (intervalId.value !== null) {
       clearInterval(intervalId.value)
       intervalId.value = null
     }
+    stopAlarm()
     isRunning.value = false
   }
 
@@ -74,6 +89,9 @@ export const useTimerStore = defineStore('timer', () => {
       if (remainingSeconds.value <= 0) {
         stopTimer()
         playAlarmSound()
+        if (alarmIntervalId.value === null) {
+          alarmIntervalId.value = startAlarmLoop()
+        }
       }
     }, 1000)
   }
