@@ -104,23 +104,25 @@ const handleDayClick = (day: number | null) => {
 <style scoped>
 .calendar-mini {
   background-color: #2d2d2d;
-  padding: 8px;
-  border-radius: 10px;
-  width: fit-content;
+  padding: 16px;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 420px;
+  min-width: 320px;
 }
 
 .calendar-header-mini {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
-  margin-bottom: 8px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
 .month-year-mini {
-  font-weight: 600;
-  font-size: 0.85rem;
-  min-width: 90px;
+  font-weight: 700;
+  font-size: 1rem;
+  min-width: 120px;
   text-align: center;
 }
 
@@ -142,46 +144,53 @@ const handleDayClick = (day: number | null) => {
 .weekdays-mini {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
   margin-bottom: 4px;
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #999;
+  justify-items: center;
+  align-items: center;
 }
 
 .weekday-mini {
-  width: 20px;
   text-align: center;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .calendar-grid-mini {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .week-mini {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
 }
 
 .day-cell {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
+  min-height: 40px;
 }
 
 .day-mini {
-  width: 20px;
-  height: 20px;
+  width: 100%;
+  max-width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #1a1a1a;
-  border-radius: 3px;
-  font-size: 0.65rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
   color: #cfcfcf;
   border: none;
   cursor: pointer;
@@ -197,11 +206,11 @@ const handleDayClick = (day: number | null) => {
 }
 
 .holiday-label {
-  font-size: 0.45rem;
+  font-size: 0.55rem;
   font-weight: 600;
   color: #ff6b6b;
   text-align: center;
-  max-width: 25px;
+  max-width: 40px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

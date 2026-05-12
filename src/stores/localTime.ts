@@ -10,15 +10,17 @@ export const useLocalTimeStore = defineStore('localTime', () => {
   const formatLocalTime = (timestamp: number) => {
     const date = new Date(timestamp)
     return {
-      time: date.toLocaleTimeString(),
-      date: date.toLocaleDateString(),
+      time: date.toLocaleTimeString('no-NO', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }),
+      date: date.toLocaleDateString('no-NO'),
     }
   }
 
   const localTime = computed(() => formatLocalTime(now.value))
-
-  const time = computed(() => new Date(now.value).toLocaleTimeString())
-  const date = computed(() => new Date(now.value).toLocaleDateString())
 
   const startTimer = () => {
     if (timerId !== undefined) return

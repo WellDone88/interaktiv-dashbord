@@ -13,10 +13,10 @@ import Radio from './components/Radio.vue'
     <main class="grid-container">
       <Weather class="card" />
       <Clock class="card" />
-      <Radio class="card" />
       <TodoList class="card" />
       <Timer class="card" />
       <Calendar class="card" />
+      <Radio class="card radio-bottom" />
     </main>
   </div>
 </template>
@@ -33,8 +33,10 @@ import Radio from './components/Radio.vue'
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: minmax(280px, auto);
   gap: 20px;
   margin-top: 20px;
+  align-items: stretch;
 }
 
 .card {
@@ -42,5 +44,12 @@ import Radio from './components/Radio.vue'
   padding: 20px;
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-bottom {
+  grid-column: 1 / -1;
+  min-height: 360px;
 }
 </style>

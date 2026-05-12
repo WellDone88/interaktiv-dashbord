@@ -9,8 +9,13 @@ export const useLocalTime = () => {
   const formatLocalTime = (timestamp: number) => {
     const date = new Date(timestamp)
     return {
-      time: date.toLocaleTimeString(),
-      date: date.toLocaleDateString(),
+      time: date.toLocaleTimeString('no-NO', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }),
+      date: date.toLocaleDateString('no-NO'),
     }
   }
 

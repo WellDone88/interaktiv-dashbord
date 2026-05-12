@@ -14,6 +14,15 @@ const { selectedDate } = storeToRefs(selectedDateStore)
 const { getHolidayName } = useNorwegianHolidays()
 
 const newTodoTitle = ref('')
+const newTodoHour = ref('12')
+const newTodoMinute = ref('00')
+
+const formatTime = (date: Date | null) => {
+  if (!date) return ''
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${hours}:${minutes}`
+}
 
 const todosForSelectedDate = computed(() => {
   const parts = (selectedDate.value || '2026-01-01').split('-')
@@ -42,13 +51,17 @@ const completedTodosForDate = computed(() => {
 
 const handleAddTodo = () => {
   if (newTodoTitle.value.trim()) {
-    const parts = (selectedDate.value || '2026-01-01').split('-')
-    const year = parseInt(parts[0] || '2026', 10)
-    const month = parseInt(parts[1] || '1', 10)
-    const day = parseInt(parts[2] || '1', 10)
-    const dueDate = new Date(year, month - 1, day)
+    const dateParts = (selectedDate.value || '2026-01-01').split('-')
+    const year = parseInt(dateParts[0] || '2026', 10)
+    const month = parseInt(dateParts[1] || '1', 10)
+    const day = parseInt(dateParts[2] || '1', 10)
+    const hours = parseInt(newTodoHour.value, 10)
+    const minutes = parseInt(newTodoMinute.value, 10)
+    const dueDate = new Date(year, month - 1, day, hours, minutes)
     addNewTodo(newTodoTitle.value, dueDate)
     newTodoTitle.value = ''
+    newTodoHour.value = '12'
+    newTodoMinute.value = '00'
   }
 }
 
@@ -62,12 +75,14 @@ const displayDate = computed(() => {
   const month = parseInt(parts[1] || '1', 10)
   const day = parseInt(parts[2] || '1', 10)
   const date = new Date(year, month - 1, day)
-  return date.toLocaleDateString('no-NO', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+
+  // Eksplisitt norsk datoformat: dag.måned.år
+  const dayStr = String(day).padStart(2, '0')
+  const monthStr = String(month).padStart(2, '0')
+  const weekday = date.toLocaleDateString('no-NO', { weekday: 'long' })
+  const monthName = date.toLocaleDateString('no-NO', { month: 'long' })
+
+  return `${weekday} ${dayStr}.${monthStr}.${year}`
 })
 
 const holidayName = computed(() => {
@@ -100,6 +115,26 @@ const holidayName = computed(() => {
         class="todo-input"
         @keyup.enter="handleAddTodo"
       />
+      <div class="time-picker">
+        <label for="todo-hour">Tid</label>
+        <div class="time-selects">
+          <select id="todo-hour" v-model="newTodoHour" class="time-select">
+            <option v-for="hour in 24" :key="hour" :value="String(hour - 1).padStart(2, '0')">
+              {{ String(hour - 1).padStart(2, '0') }}
+            </option>
+          </select>
+          <span>:</span>
+          <select id="todo-minute" v-model="newTodoMinute" class="time-select">
+            <option
+              v-for="minute in [0, 15, 30, 45]"
+              :key="minute"
+              :value="String(minute).padStart(2, '0')"
+            >
+              {{ String(minute).padStart(2, '0') }}
+            </option>
+          </select>
+        </div>
+      </div>
       <button @click="handleAddTodo" class="add-btn">Legg til</button>
     </div>
 
@@ -113,6 +148,7 @@ const holidayName = computed(() => {
             class="todo-checkbox"
           />
           <span class="todo-title">{{ todo.title }}</span>
+          <span class="todo-time">{{ formatTime(todo.dueDate) }}</span>
         </div>
         <button @click="removeTodoItem(todo.id)" class="delete-btn">✕</button>
       </li>
@@ -130,6 +166,7 @@ const holidayName = computed(() => {
               class="todo-checkbox"
             />
             <span class="todo-title">{{ todo.title }}</span>
+            <span class="todo-time">{{ formatTime(todo.dueDate) }}</span>
           </div>
           <button @click="removeTodoItem(todo.id)" class="delete-btn">✕</button>
         </li>
@@ -188,6 +225,15 @@ const holidayName = computed(() => {
   transition: border-color 0.2s;
 }
 
+.native-date-input {
+  position: absolute;
+  left: -9999px;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .date-input:focus {
   outline: none;
   border-color: #0066cc;
@@ -211,12 +257,15 @@ const holidayName = computed(() => {
 
 .add-todo {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .todo-input {
   flex: 1;
+  min-width: 180px;
   background-color: #1a1a1a;
   border: 1px solid #3d3d3d;
   color: white;
@@ -229,6 +278,44 @@ const holidayName = computed(() => {
 .todo-input:focus {
   outline: none;
   border-color: #0066cc;
+}
+
+.time-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time-picker label {
+  font-size: 0.85rem;
+  color: #cfcfcf;
+}
+
+.time-selects {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.time-select {
+  background-color: #1a1a1a;
+  border: 1px solid #3d3d3d;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  min-width: 70px;
+}
+
+.time-select:focus {
+  outline: none;
+  border-color: #0066cc;
+}
+
+.todo-time {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: #999;
 }
 
 .add-btn {
@@ -286,33 +373,33 @@ const holidayName = computed(() => {
 
 .todo-title {
   flex: 1;
-
-  .completed-section {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid #3d3d3d;
-  }
-
-  .completed-title {
-    font-size: 0.95rem;
-    color: #0066cc;
-    margin: 0 0 12px;
-    font-weight: 600;
-  }
-
-  .completed-list {
-    opacity: 0.65;
-  }
-
-  .completed-item {
-    background-color: #1a1a1a;
-  }
-
-  .completed-item .todo-title {
-    text-decoration: line-through;
-    color: #666;
-  }
   font-size: 0.95rem;
+}
+
+.completed-section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #3d3d3d;
+}
+
+.completed-title {
+  font-size: 0.95rem;
+  color: #0066cc;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
+.completed-list {
+  opacity: 0.65;
+}
+
+.completed-item {
+  background-color: #1a1a1a;
+}
+
+.completed-item .todo-title {
+  text-decoration: line-through;
+  color: #666;
 }
 
 .delete-btn {

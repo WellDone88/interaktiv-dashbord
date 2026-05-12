@@ -49,7 +49,7 @@ onMounted(() => {
 <style scoped>
 .weather-card {
   background-color: #2d2d2d;
-  padding: 20px;
+  padding: 16px;
   border-radius: 15px;
   margin-bottom: 20px;
 }
@@ -58,7 +58,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .weather-header h2 {
@@ -92,12 +92,12 @@ onMounted(() => {
 .weather-main {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
+  gap: 14px;
+  margin-bottom: 14px;
 }
 
 .weather-icon {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 .weather-info {
@@ -106,26 +106,26 @@ onMounted(() => {
 }
 
 .temperature {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
 }
 
 .condition {
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: #cfcfcf;
-  margin: 5px 0 0;
+  margin: 4px 0 0;
 }
 
 .weather-details {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .detail {
   background-color: #1a1a1a;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -144,7 +144,7 @@ onMounted(() => {
 
 .loading {
   text-align: center;
-  padding: 40px 20px;
+  padding: 28px 16px;
   color: #999;
   font-size: 0.95rem;
 }
