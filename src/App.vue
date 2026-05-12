@@ -4,6 +4,7 @@ import Calendar from './components/Calendar.vue'
 import Weather from './components/Weather.vue'
 import TodoList from './components/TodoList.vue'
 import Timer from './components/Timer.vue'
+import Radio from './components/Radio.vue'
 </script>
 
 <template>
@@ -12,6 +13,7 @@ import Timer from './components/Timer.vue'
     <main class="grid-container">
       <Weather class="card" />
       <Clock class="card" />
+      <Radio class="card" />
       <TodoList class="card" />
       <Timer class="card" />
       <Calendar class="card" />
